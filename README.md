@@ -12,4 +12,4 @@ Antes de começar, certifique-se de ter os seguintes requisitos instalados em su
 # Service Worker e Registro de Token
 Quando o botão é clickado, o service worker é registrado. O service worker é responsável por interceptar eventos de notificação e gerenciar a exibição das notificações push.
 
-Para realizar o envio das notificações quando o browser estiver fevhado por favor acesse este link: https://github.com/alysson1346/firebase-notification-backend
+Para realizar o envio das notificações quando o browser estiver fechado por favor acesse este link: https://github.com/alysson1346/firebase-notification-backend
