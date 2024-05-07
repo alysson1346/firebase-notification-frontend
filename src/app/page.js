@@ -36,7 +36,7 @@ export const askForPermissioToReceiveNotifications = async () => {
       if (permission === 'granted') {
         console.log('Notification permission granted.');
         // Obtenha o token de registro do dispositivo
-        const token = await getToken(messaging, { vapidKey: 'BAbRAtwa2teNfBpadCWI0fwiNuOK-R2-yTIzgHQ20ES-HksOAr5V0J3oDp9sMaMMbynrUgBT0BDjQunNEy_8esE' });
+        const token = await getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_VAPIDKEY});
         console.log('Token:', token);
       } else {
         console.log('Unable to get permission to notify.');
