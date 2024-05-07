@@ -1,95 +1,76 @@
-import Image from "next/image";
+"use client"
+
 import styles from "./page.module.css";
+import ClientButton from "@/components/ClientButton";
+import registerServiceWorker from '../registerServiceWorker';
+import firebase from 'firebase/compat/app';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import "dotenv/config";
+
+
+const firebaseConfig = {
+  apiKey: process.env.APIKEY,
+  authDomain: process.env.AUTHDOMAIN,
+  projectId: process.env.PROJECTID,
+  storageBucket: process.env.STORAGEBUCKET,
+  messagingSenderId: process.env.MESSAGINGSENDERID,
+  appId: process.env.APPID,
+  measurementId: process.env.MEASUREMENTID
+};
+
+export const initializeFirebase = () => {
+
+  try {
+     firebase.initializeApp(firebaseConfig);
+      console.log('Firebase inicializado com sucesso!');
+    
+  } catch (error) {
+    console.error('Erro ao inicializar o Firebase:', error);
+  }
+}
+
+const messaging = getMessaging(firebase.initializeApp(firebaseConfig))
+
+export const askForPermissioToReceiveNotifications = async () => {
+  console.log('clicou')
+  try {
+    if (typeof navigator !== 'undefined' && 'Notification' in window) {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        console.log('Notification permission granted.');
+        // Obtenha o token de registro do dispositivo
+        const token = await getToken(messaging, { vapidKey: 'BAbRAtwa2teNfBpadCWI0fwiNuOK-R2-yTIzgHQ20ES-HksOAr5V0J3oDp9sMaMMbynrUgBT0BDjQunNEy_8esE' });
+        console.log('Token:', token);
+      } else {
+        console.log('Unable to get permission to notify.');
+      }
+    } else {
+      console.log('Notifications not supported or navigator object not available.');
+    }
+  } catch (error) {
+    console.error('Error requesting permission:', error);
+  }
+};
+
+
+onMessage(messaging, (payload) => {
+  console.log('Message received. Payload:', payload);
+});
+
+
+import { useEffect } from "react";
 
 export default function Home() {
+  
+  useEffect(()=>{
+    registerServiceWorker()
+    initializeFirebase(); 
+  },[])
+  
+  
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      <ClientButton onClick={askForPermissioToReceiveNotifications}>aceitar notificação</ClientButton>
     </main>
   );
 }
