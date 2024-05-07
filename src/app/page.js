@@ -1,21 +1,18 @@
 "use client"
-
 import styles from "./page.module.css";
 import ClientButton from "@/components/ClientButton";
 import registerServiceWorker from '../registerServiceWorker';
 import firebase from 'firebase/compat/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import "dotenv/config";
-
 
 const firebaseConfig = {
-  apiKey: process.env.APIKEY,
-  authDomain: process.env.AUTHDOMAIN,
-  projectId: process.env.PROJECTID,
-  storageBucket: process.env.STORAGEBUCKET,
-  messagingSenderId: process.env.MESSAGINGSENDERID,
-  appId: process.env.APPID,
-  measurementId: process.env.MEASUREMENTID
+  apiKey: process.env.NEXT_PUBLIC_APIKEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTHDOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECTID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGEBUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGINGSENDERID,
+  appId: process.env.NEXT_PUBLIC_APPID,
+  measurementId: process.env.NEXT_PUBLIC_MEASUREMENTID
 };
 
 export const initializeFirebase = () => {
